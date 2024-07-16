@@ -1,3 +1,27 @@
 spring:
   application:
     name: task-list
+  config:
+    import: optional:file:.env[.properties]
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}/${POSTGRES_DB}?currentSchema=${POSTGRES_SCHEMA}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  sql:
+    init:
+      mode: always
+      continue-on-error: false
+#      data-locations: classpath:demo_data.sql
+
+#  jpa:
+#    hibernate:
+#      ddl-auto: none
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    access-duration: ${JWT_ACCESS_DURATION}
+    refresh-duration: ${JWT_REFRESH_DURATION}

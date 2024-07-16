@@ -1,21 +1,76 @@
 package com.example.task_list.service.impl;
 
+import com.example.task_list.domain.user.User;
 import com.example.task_list.service.AuthService;
+import com.example.task_list.service.UserService;
 import com.example.task_list.web.dto.auth.JwtRequest;
 import com.example.task_list.web.dto.auth.JwtResponse;
+import com.example.task_list.web.security.jwt.JwtProperties;
+import com.example.task_list.web.security.jwt.JwtTokenFilter;
+import com.example.task_list.web.security.jwt.TokenType;
+import io.github.ilyalisov.jwt.config.TokenParameters;
+import io.github.ilyalisov.jwt.service.TokenService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final TokenService tokenService;
+    private final JwtProperties jwtProperties;
+
     @Override
-    public JwtResponse login(JwtRequest loginRequest) {
-        return null;
+    public JwtResponse login(final JwtRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        );
+
+        JwtResponse response = new JwtResponse();
+        userService.getByUsername(request.getUsername());
+
+        response.setAccessToken(
+                tokenService.create(
+                        TokenParameters.builder(
+                                        request.getUsername(),
+                                        TokenType.ACCESS.name(),
+                                        jwtProperties.getAccessDuration()
+                                )
+                                .build()
+                )
+        );
+
+        response.setRefreshToken(
+                tokenService.create(
+                        TokenParameters.builder(
+                                        request.getUsername(),
+                                        TokenType.REFRESH.name(),
+                                        jwtProperties.getRefreshDuration()
+                                )
+                                .build()
+                )
+        );
+
+        return response;
     }
 
     @Override
     public JwtResponse refresh(String refreshToken) {
-        return null;
+        String subject = tokenService.getSubject(refreshToken);
+        User user = userService.getByUsername(subject);
+
+        JwtRequest jwtRequest = new JwtRequest();
+        jwtRequest.setUsername(user.getUsername());
+        jwtRequest.setPassword(user.getPassword());
+
+        return login(jwtRequest);
     }
 
 }

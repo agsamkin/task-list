@@ -1,0 +1,24 @@
+#version: "3.9"
+
+networks:
+  tasklist-network:
+    driver: bridge
+
+volumes:
+  tasklist-data:
+    driver: local
+
+services:
+  postgres:
+    image: postgres:14.7-alpine
+    networks:
+      - tasklist-network
+    env_file:
+      - .env
+    ports:
+      - "15432:5432"
+    volumes:
+      - tasklist-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    restart: always
