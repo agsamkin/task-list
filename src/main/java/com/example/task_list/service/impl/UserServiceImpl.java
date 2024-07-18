@@ -6,6 +6,7 @@ import com.example.task_list.domain.user.User;
 import com.example.task_list.repository.UserRepository;
 import com.example.task_list.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import java.util.Set;
 
 @Transactional
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @__(@Lazy))
 public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
     public User getByUsername(String username) {
         return userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));;
+                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
     }
 
     @Override

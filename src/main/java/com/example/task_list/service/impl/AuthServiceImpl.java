@@ -5,18 +5,22 @@ import com.example.task_list.service.AuthService;
 import com.example.task_list.service.UserService;
 import com.example.task_list.web.dto.auth.JwtRequest;
 import com.example.task_list.web.dto.auth.JwtResponse;
+
 import com.example.task_list.web.security.jwt.JwtProperties;
-import com.example.task_list.web.security.jwt.JwtTokenFilter;
 import com.example.task_list.web.security.jwt.TokenType;
+
 import io.github.ilyalisov.jwt.config.TokenParameters;
 import io.github.ilyalisov.jwt.service.TokenService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
@@ -33,8 +37,11 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
 
+        User user = userService.getByUsername(request.getUsername());
+
         JwtResponse response = new JwtResponse();
-        userService.getByUsername(request.getUsername());
+        response.setUserId(user.getId());
+        response.setUsername(user.getUsername());
 
         response.setAccessToken(
                 tokenService.create(
@@ -63,14 +70,42 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse refresh(String refreshToken) {
+        if (refreshToken.isEmpty()
+                || !tokenService.getType(refreshToken).equals(TokenType.REFRESH.name())
+                || tokenService.isExpired(refreshToken)) {
+            return null;
+        }
+
         String subject = tokenService.getSubject(refreshToken);
         User user = userService.getByUsername(subject);
 
-        JwtRequest jwtRequest = new JwtRequest();
-        jwtRequest.setUsername(user.getUsername());
-        jwtRequest.setPassword(user.getPassword());
+        JwtResponse response = new JwtResponse();
+        response.setUserId(user.getId());
+        response.setUsername(user.getUsername());
 
-        return login(jwtRequest);
+        response.setAccessToken(
+                tokenService.create(
+                        TokenParameters.builder(
+                                        user.getUsername(),
+                                        TokenType.ACCESS.name(),
+                                        jwtProperties.getAccessDuration()
+                                )
+                                .build()
+                )
+        );
+
+        response.setRefreshToken(
+                tokenService.create(
+                        TokenParameters.builder(
+                                        user.getUsername(),
+                                        TokenType.REFRESH.name(),
+                                        jwtProperties.getRefreshDuration()
+                                )
+                                .build()
+                )
+        );
+
+        return response;
     }
 
 }

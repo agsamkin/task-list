@@ -2,6 +2,7 @@ package com.example.task_list.web.security;
 
 import com.example.task_list.domain.user.User;
 import lombok.Data;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

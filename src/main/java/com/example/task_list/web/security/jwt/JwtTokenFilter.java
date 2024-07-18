@@ -5,8 +5,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +33,7 @@ public class JwtTokenFilter extends GenericFilterBean {
         try {
             String token = resolve((HttpServletRequest) servletRequest);
             if (!token.isEmpty()
-                    && tokenService.getType(token).equals(TokenType.ACCESS)
+                    && tokenService.getType(token).equals(TokenType.ACCESS.name())
                     && !tokenService.isExpired(token)) {
 
                 Authentication authentication = getAuthentication(token);
@@ -48,7 +50,7 @@ public class JwtTokenFilter extends GenericFilterBean {
 
     private String resolve(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("bearer ")) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
 

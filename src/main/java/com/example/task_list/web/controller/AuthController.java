@@ -1,24 +1,27 @@
 package com.example.task_list.web.controller;
 
 import com.example.task_list.domain.user.User;
+
 import com.example.task_list.service.AuthService;
 import com.example.task_list.service.UserService;
 import com.example.task_list.web.dto.auth.JwtRequest;
 import com.example.task_list.web.dto.auth.JwtResponse;
 import com.example.task_list.web.dto.user.UserDto;
 import com.example.task_list.web.dto.validation.OnCreate;
+
 import com.example.task_list.web.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Validated
+@RestController
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
     private final AuthService authService;
@@ -38,7 +41,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    private JwtResponse refresh(@RequestBody String refreshToken) {
+    public JwtResponse refresh(@RequestBody final String refreshToken) {
         return authService.refresh(refreshToken);
     }
 

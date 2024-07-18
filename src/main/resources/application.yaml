@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   application:
     name: task-list
@@ -25,3 +28,6 @@ security:
     secret: ${JWT_SECRET}
     access-duration: ${JWT_ACCESS_DURATION}
     refresh-duration: ${JWT_REFRESH_DURATION}
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml

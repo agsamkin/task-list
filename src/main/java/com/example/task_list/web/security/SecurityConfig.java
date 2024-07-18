@@ -2,10 +2,13 @@ package com.example.task_list.web.security;
 
 import com.example.task_list.web.security.jwt.JwtProperties;
 import com.example.task_list.web.security.jwt.JwtTokenFilter;
+
 import io.github.ilyalisov.jwt.service.TokenService;
 import io.github.ilyalisov.jwt.service.TokenServiceImpl;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
