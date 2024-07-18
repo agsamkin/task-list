@@ -15,10 +15,14 @@ spring:
 
   sql:
     init:
-      mode: always
+      mode: never
       continue-on-error: false
 #      data-locations: classpath:demo_data.sql
 
+  liquibase:
+    change-log: classpath:liquibase/db.changelog.yaml
+    enabled: true
+    default-schema: tasklist
 #  jpa:
 #    hibernate:
 #      ddl-auto: none
