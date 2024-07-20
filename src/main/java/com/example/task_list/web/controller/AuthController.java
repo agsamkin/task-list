@@ -10,6 +10,7 @@ import com.example.task_list.web.dto.user.UserDto;
 import com.example.task_list.web.dto.validation.OnCreate;
 
 import com.example.task_list.web.mapper.UserMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(
+        name = "Auth Controller",
+        description = "Auth API"
+)
 @RequiredArgsConstructor
 @Validated
 @RestController

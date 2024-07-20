@@ -4,6 +4,7 @@ import com.example.task_list.domain.task.Status;
 import com.example.task_list.web.dto.validation.OnCreate;
 import com.example.task_list.web.dto.validation.OnUpdate;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -11,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
+@Schema(description = "Task DTO")
 @Data
 public class TaskDto {
 

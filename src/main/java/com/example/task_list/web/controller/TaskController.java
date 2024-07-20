@@ -6,6 +6,8 @@ import com.example.task_list.web.dto.task.TaskDto;
 import com.example.task_list.web.dto.validation.OnUpdate;
 import com.example.task_list.web.mapper.TaskMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(
+        name = "Task Controller",
+        description = "Task API"
+)
 @RestController
 @RequestMapping("/api/v1/tasks")
 @RequiredArgsConstructor
@@ -26,12 +32,14 @@ public class TaskController {
     private final TaskService taskService;
     private final TaskMapper taskMapper;
 
+    @Operation(summary = "Get TaskDto by id")
     @GetMapping("/{id}")
     public TaskDto getById(@PathVariable Long id) {
         Task task = taskService.getById(id);
         return taskMapper.toDto(task);
     }
 
+    @Operation(summary = "Update task")
     @PutMapping
     public TaskDto update(@Validated(OnUpdate.class) @RequestBody TaskDto dto) {
         Task task = taskMapper.toEntity(dto);
@@ -39,6 +47,7 @@ public class TaskController {
         return taskMapper.toDto(updatedTask);
     }
 
+    @Operation(summary = "Delete task")
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id) {
         taskService.delete(id);
