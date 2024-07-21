@@ -7,8 +7,29 @@ networks:
 volumes:
   tasklist-data:
     driver: local
+  cache:
+    driver: local
 
 services:
+  app:
+    build:
+      context: .
+    container_name: tasklist
+    networks:
+      - tasklist-network
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=postgres:5432
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ACCESS_DURATION=${JWT_ACCESS_DURATION}
+      - JWT_REFRESH_DURATION=${JWT_REFRESH_DURATION}
+    ports:
+      - '8081:8081'
+
   postgres:
     image: postgres:14.7-alpine
     networks:
@@ -18,7 +39,20 @@ services:
     ports:
       - "15432:5432"
     volumes:
+      - ./src/main/resources/db-init:/docker-entrypoint-initdb.d
       - tasklist-data:/var/lib/postgresql/data
     environment:
       POSTGRES_HOST_AUTH_METHOD: "trust"
     restart: always
+
+  redis:
+    image: redis:7.2-rc-alpine
+    restart: always
+    container_name: redis
+    networks:
+      - tasklist-network
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - cache:/data

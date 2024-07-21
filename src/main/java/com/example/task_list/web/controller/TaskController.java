@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class TaskController {
     private final TaskService taskService;
     private final TaskMapper taskMapper;
 
+    @PreAuthorize("@cse.canAccessTask(#id)")
     @Operation(summary = "Get TaskDto by id")
     @GetMapping("/{id}")
     public TaskDto getById(@PathVariable Long id) {
@@ -39,6 +41,7 @@ public class TaskController {
         return taskMapper.toDto(task);
     }
 
+    @PreAuthorize("@cse.canAccessTask(#dto.id)")
     @Operation(summary = "Update task")
     @PutMapping
     public TaskDto update(@Validated(OnUpdate.class) @RequestBody TaskDto dto) {
@@ -47,6 +50,7 @@ public class TaskController {
         return taskMapper.toDto(updatedTask);
     }
 
+    @PreAuthorize("@cse.canAccessTask(#id)")
     @Operation(summary = "Delete task")
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id) {

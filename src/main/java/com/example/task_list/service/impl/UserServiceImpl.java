@@ -6,6 +6,10 @@ import com.example.task_list.domain.user.User;
 import com.example.task_list.repository.UserRepository;
 import com.example.task_list.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
+    @Cacheable(value = "UserService::getById", key = "#userId")
     @Transactional(readOnly = true)
     @Override
     public User getById(Long userId) {
@@ -29,6 +34,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found."));
     }
 
+    @Cacheable(value = "UserService::getByUsername", key = "#username")
     @Transactional(readOnly = true)
     @Override
     public User getByUsername(String username) {
@@ -37,6 +43,10 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found."));
     }
 
+    @Caching(put = {
+                @CachePut(value = "UserService::getById", key = "#user.id"),
+                @CachePut(value = "UserService::getByUsername", key = "#user.username")
+    })
     @Override
     public User update(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -44,6 +54,10 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Caching(cacheable = {
+            @Cacheable(value = "UserService::getById", key = "#user.id"),
+            @Cacheable(value = "UserService::getByUsername", key = "#user.username")
+    })
     @Override
     public User create(User user) {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
@@ -60,12 +74,14 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Cacheable(value = "UserService::isTaskOwner", key = "#userId" + "." + "#taskId")
     @Transactional(readOnly = true)
     @Override
     public boolean isTaskOwner(Long userId, Long taskId) {
         return userRepository.isTaskOwner(userId, taskId);
     }
 
+    @CacheEvict(value = "UserService::getById", key = "#userId")
     @Override
     public void delete(Long userId) {
         userRepository.delete(userId);

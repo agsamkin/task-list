@@ -7,6 +7,10 @@ import com.example.task_list.repository.TaskRepository;
 import com.example.task_list.service.TaskService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +23,7 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
 
+    @Cacheable(value = "TaskService::getById", key = "#taskId")
     @Transactional(readOnly = true)
     @Override
     public Task getById(Long taskId) {
@@ -33,6 +38,9 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findAllByUserId(userId);
     }
 
+    @Caching(put = {
+            @CachePut(value = "TaskService::getById", key = "#task.id")
+    })
     @Override
     public Task update(Task task) {
         if (task.getStatus() == null) {
@@ -42,6 +50,9 @@ public class TaskServiceImpl implements TaskService {
         return task;
     }
 
+    @Caching(cacheable = {
+            @Cacheable(value = "TaskService::getById", key = "#task.id")
+    })
     @Override
     public Task create(Task task, Long userId) {
         task.setStatus(Status.TODO);
@@ -50,6 +61,7 @@ public class TaskServiceImpl implements TaskService {
         return task;
     }
 
+    @CacheEvict(value = "TaskService::getById", key = "#taskId")
     @Override
     public void delete(Long taskId) {
         taskRepository.delete(taskId);
