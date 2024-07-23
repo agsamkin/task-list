@@ -7,7 +7,6 @@ import com.example.task_list.repository.DataSourceConfig;
 import com.example.task_list.repository.UserRepository;
 import com.example.task_list.repository.mapper.UserRowMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

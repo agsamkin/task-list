@@ -5,9 +5,7 @@ import com.example.task_list.domain.task.Task;
 import com.example.task_list.repository.DataSourceConfig;
 import com.example.task_list.repository.TaskRepository;
 import com.example.task_list.repository.mapper.TaskRowMapper;
-import com.example.task_list.web.mapper.TaskMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
