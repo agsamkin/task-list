@@ -43,9 +43,5 @@ security:
     access-duration: ${JWT_ACCESS_DURATION}
     refresh-duration: ${JWT_REFRESH_DURATION}
 
-mybatis:
-  mapper-locations: classpath:mybatis/mapper/*.xml
-
-
 springdoc:
   override-with-generic-response: false

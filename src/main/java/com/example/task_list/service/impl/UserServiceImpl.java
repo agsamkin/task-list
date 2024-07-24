@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.update(user);
+        userRepository.save(user);
         return user;
     }
 
@@ -66,11 +66,11 @@ public class UserServiceImpl implements UserService {
         if (!user.getPassword().equals(user.getPasswordConfirmation())) {
             throw new IllegalStateException("Password and password confirmation do not match.");
         }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.create(user);
-        userRepository.insertUserRole(user.getId(), Role.ROLE_USER);
         Set<Role> roles = Set.of(Role.ROLE_USER);
         user.setRoles(roles);
+        userRepository.save(user);
         return user;
     }
 
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(value = "UserService::getById", key = "#userId")
     @Override
     public void delete(Long userId) {
-        userRepository.delete(userId);
+        userRepository.deleteById(userId);
     }
 
 }
