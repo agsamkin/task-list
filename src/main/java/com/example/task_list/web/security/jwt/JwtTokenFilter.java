@@ -5,14 +5,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.GenericFilterBean;
@@ -26,19 +23,23 @@ public class JwtTokenFilter extends GenericFilterBean {
     @SneakyThrows
     @Override
     public void doFilter(
-            ServletRequest servletRequest,
-            ServletResponse servletResponse,
-            FilterChain filterChain) {
+            final ServletRequest servletRequest,
+            final ServletResponse servletResponse,
+            final FilterChain filterChain) {
 
         try {
             String token = resolve((HttpServletRequest) servletRequest);
             if (!token.isEmpty()
-                    && tokenService.getType(token).equals(TokenType.ACCESS.name())
+                    && tokenService
+                    .getType(token)
+                    .equals(TokenType.ACCESS.name())
                     && !tokenService.isExpired(token)) {
 
                 Authentication authentication = getAuthentication(token);
                 if (authentication != null) {
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    SecurityContextHolder
+                            .getContext()
+                            .setAuthentication(authentication);
                 }
 
             }
@@ -48,7 +49,7 @@ public class JwtTokenFilter extends GenericFilterBean {
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
-    private String resolve(HttpServletRequest request) {
+    private String resolve(final HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
@@ -57,9 +58,10 @@ public class JwtTokenFilter extends GenericFilterBean {
         return "";
     }
 
-    private Authentication getAuthentication(String token) {
+    private Authentication getAuthentication(final String token) {
         String subject = tokenService.getSubject(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
+        UserDetails userDetails =
+                userDetailsService.loadUserByUsername(subject);
         if (userDetails != null) {
             return new UsernamePasswordAuthenticationToken(
                     userDetails, "", userDetails.getAuthorities()

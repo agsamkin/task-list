@@ -2,7 +2,6 @@ package com.example.task_list.web.security.jwt;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -16,10 +15,10 @@ public class JwtProperties {
 
     private String secret;
 
-//    @Value("${access-duration}")
+    //    @Value("${access-duration}")
     private Duration accessDuration;
 
-//    @Value("${refresh-duration}")
+    //    @Value("${refresh-duration}")
     private Duration refreshDuration;
 
 }

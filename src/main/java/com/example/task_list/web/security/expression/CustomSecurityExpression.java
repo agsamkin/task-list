@@ -1,8 +1,6 @@
 package com.example.task_list.web.security.expression;
 
 import com.example.task_list.domain.user.Role;
-import com.example.task_list.domain.user.User;
-import com.example.task_list.service.AuthService;
 import com.example.task_list.service.UserService;
 import com.example.task_list.web.security.SecurityUser;
 import lombok.RequiredArgsConstructor;

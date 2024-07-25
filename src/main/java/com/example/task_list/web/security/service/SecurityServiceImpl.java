@@ -2,7 +2,6 @@ package com.example.task_list.web.security.service;
 
 import com.example.task_list.web.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

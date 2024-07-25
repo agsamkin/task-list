@@ -2,7 +2,6 @@ package com.example.task_list.web.security;
 
 import com.example.task_list.domain.user.User;
 import lombok.Data;
-
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -28,11 +27,17 @@ public class SecurityUser implements UserDetails {
         );
     }
 
-    private static SimpleGrantedAuthority mapToGrantedAuthorities(final String role) {
+    private static SimpleGrantedAuthority mapToGrantedAuthorities(
+            final String role
+    ) {
         return new SimpleGrantedAuthority(role);
     }
 
-    private SecurityUser(final Long id, final String username, final String password) {
+    private SecurityUser(
+            final Long id,
+            final String username,
+            final String password
+    ) {
         this.id = id;
         this.username = username;
         this.password = password;

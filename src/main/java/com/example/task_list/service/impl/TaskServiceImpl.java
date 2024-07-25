@@ -8,7 +8,6 @@ import com.example.task_list.domain.user.User;
 import com.example.task_list.repository.TaskRepository;
 import com.example.task_list.service.ImageService;
 import com.example.task_list.service.TaskService;
-
 import com.example.task_list.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -32,15 +31,17 @@ public class TaskServiceImpl implements TaskService {
     @Cacheable(value = "TaskService::getById", key = "#taskId")
     @Transactional(readOnly = true)
     @Override
-    public Task getById(Long taskId) {
+    public Task getById(final Long taskId) {
         return taskRepository
                 .findById(taskId)
-                .orElseThrow(() -> new ResourceNotFoundException("Task not found."));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Task not found.")
+                );
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<Task> getAllByUserId(Long userId) {
+    public List<Task> getAllByUserId(final Long userId) {
         return taskRepository.findAllByUserId(userId);
     }
 
@@ -48,7 +49,7 @@ public class TaskServiceImpl implements TaskService {
             @CachePut(value = "TaskService::getById", key = "#task.id")
     })
     @Override
-    public Task update(Task task) {
+    public Task update(final Task task) {
         if (task.getStatus() == null) {
             task.setStatus(Status.TODO);
         }
@@ -60,7 +61,7 @@ public class TaskServiceImpl implements TaskService {
             @Cacheable(value = "TaskService::getById", key = "#task.id")
     })
     @Override
-    public Task create(Task task, Long userId) {
+    public Task create(final Task task, final Long userId) {
         User user = userService.getById(userId);
         task.setStatus(Status.TODO);
         user.getTasks().add(task);
@@ -70,13 +71,13 @@ public class TaskServiceImpl implements TaskService {
 
     @CacheEvict(value = "TaskService::getById", key = "#taskId")
     @Override
-    public void delete(Long taskId) {
+    public void delete(final Long taskId) {
         taskRepository.deleteById(taskId);
     }
 
     @CacheEvict(value = "TaskService::getById", key = "#id")
     @Override
-    public void uploadImage(Long id, TaskImage image) {
+    public void uploadImage(final Long id, final TaskImage image) {
         Task task = getById(id);
         String fileName = imageService.uploadImage(image);
         task.getImages().add(fileName);

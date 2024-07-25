@@ -5,18 +5,13 @@ import com.example.task_list.service.AuthService;
 import com.example.task_list.service.UserService;
 import com.example.task_list.web.dto.auth.JwtRequest;
 import com.example.task_list.web.dto.auth.JwtResponse;
-
 import com.example.task_list.web.security.jwt.JwtProperties;
 import com.example.task_list.web.security.jwt.TokenType;
-
 import io.github.ilyalisov.jwt.config.TokenParameters;
 import io.github.ilyalisov.jwt.service.TokenService;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -69,9 +64,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public JwtResponse refresh(String refreshToken) {
+    public JwtResponse refresh(final String refreshToken) {
         if (refreshToken.isEmpty()
-                || !tokenService.getType(refreshToken).equals(TokenType.REFRESH.name())
+                || !tokenService
+                    .getType(refreshToken)
+                    .equals(TokenType.REFRESH.name())
                 || tokenService.isExpired(refreshToken)) {
             return null;
         }

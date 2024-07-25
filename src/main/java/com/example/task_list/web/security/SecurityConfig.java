@@ -2,19 +2,14 @@ package com.example.task_list.web.security;
 
 import com.example.task_list.web.security.jwt.JwtProperties;
 import com.example.task_list.web.security.jwt.JwtTokenFilter;
-
 import io.github.ilyalisov.jwt.service.TokenService;
 import io.github.ilyalisov.jwt.service.TokenServiceImpl;
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
-import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -45,7 +40,9 @@ public class SecurityConfig {
 
     @SneakyThrows
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
+    public AuthenticationManager authenticationManager(
+            final AuthenticationConfiguration configuration
+    ) {
         return configuration.getAuthenticationManager();
     }
 
@@ -61,23 +58,30 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS
-                        ))
-                .exceptionHandling(configure ->
-                        configure.authenticationEntryPoint(
-                                        (request, response, authException) -> {
-                                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                                            response.getWriter().write("Unauthorized.");
-                                        }
+                .sessionManagement(
+                        sessionManagement ->
+                                sessionManagement.sessionCreationPolicy(
+                                        SessionCreationPolicy.STATELESS
                                 )
-                                .accessDeniedHandler(
-                                        (request, response, authException) -> {
-                                            response.setStatus(HttpStatus.FORBIDDEN.value());
-                                            response.getWriter().write("Forbidden.");
-                                        }
-                                )
+                )
+                .exceptionHandling(
+                        configure ->
+                                configure
+                                .authenticationEntryPoint(
+                                 (request, response, authException) -> {
+                                     response.setStatus(
+                                             HttpStatus.UNAUTHORIZED.value()
+                                     );
+                                     response.getWriter()
+                                             .write("Unauthorized.");
+                                 })
+                                 .accessDeniedHandler(
+                                  (request, response, authException) -> {
+                                      response.setStatus(
+                                              HttpStatus.FORBIDDEN.value()
+                                      );
+                                      response.getWriter().write("Forbidden.");
+                                  })
                 )
                 .authorizeHttpRequests(configure ->
                         configure

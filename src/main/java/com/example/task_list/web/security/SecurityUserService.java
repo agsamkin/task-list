@@ -2,10 +2,8 @@ package com.example.task_list.web.security;
 
 import com.example.task_list.domain.user.User;
 import com.example.task_list.service.UserService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,7 @@ public class SecurityUserService implements UserDetailsService {
 
     @SneakyThrows
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(final String username) {
         User client = userService.getByUsername(username);
         return new SecurityUser(client);
     }
