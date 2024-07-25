@@ -37,10 +37,10 @@ Task can have images.
 To run this application you need to create `.env` file in root directory with
 next environments:
 
-- `HOST` - host of Postgresql database
+- `POSTGRES_HOST` - host of Postgresql database
 - `POSTGRES_USERNAME` - username for Postgresql database
 - `POSTGRES_PASSWORD` - password for Postgresql database
-- `POSTGRES_DATABASE` - name of Postgresql database
+- `POSTGRES_DB` - name of Postgresql database
 - `POSTGRES_SCHEMA` - name of Postgresql schema
 - `REDIS_HOST` - host of Redis instance
 - `REDIS_PASSWORD` - password for Redis
