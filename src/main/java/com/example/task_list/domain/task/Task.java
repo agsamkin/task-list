@@ -30,6 +30,7 @@ public class Task implements Serializable {
 
     @Enumerated(value = EnumType.STRING)
     private Status status;
+
     private LocalDateTime expirationDate;
 
     @Column(name = "image")
