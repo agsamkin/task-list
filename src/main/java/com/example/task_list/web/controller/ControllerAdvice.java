@@ -2,6 +2,7 @@ package com.example.task_list.web.controller;
 
 import com.example.task_list.domain.exception.AccessDeniedException;
 import com.example.task_list.domain.exception.ExceptionBody;
+import com.example.task_list.domain.exception.ImageUploadException;
 import com.example.task_list.domain.exception.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -81,6 +82,12 @@ public class ControllerAdvice {
             final AuthenticationException e
     ) {
         return new ExceptionBody("Authentication failed.");
+    }
+
+    @ExceptionHandler(ImageUploadException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handleImageUpload(final Exception e) {
+        return new ExceptionBody(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

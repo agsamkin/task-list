@@ -9,6 +9,8 @@ volumes:
     driver: local
   cache:
     driver: local
+  minio-data:
+    driver: local
 
 services:
   app:
@@ -19,6 +21,8 @@ services:
       - tasklist-network
     depends_on:
       - postgres
+      - redis
+      - minio
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USERNAME=${POSTGRES_USERNAME}
@@ -57,3 +61,19 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     volumes:
       - cache:/data
+
+  minio:
+    image: minio/minio:latest
+    restart: always
+    container_name: minio
+    networks:
+      - tasklist-network
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY}
+    command: server ~/minio --console-address :9090
+    ports:
+      - '9090:9090'
+      - '9000:9000'
+    volumes:
+      - minio-data:/minio

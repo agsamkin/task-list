@@ -1,6 +1,7 @@
 package com.example.task_list.service;
 
 import com.example.task_list.domain.task.Task;
+import com.example.task_list.domain.task.TaskImage;
 
 import java.util.List;
 
@@ -16,4 +17,5 @@ public interface TaskService {
 
     void delete(Long taskId);
 
+    void uploadImage(Long id, TaskImage image);
 }
