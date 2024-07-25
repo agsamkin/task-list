@@ -1,5 +1,7 @@
 # Tasklist
 
+[![build and test](https://github.com/agsamkin/task-list/actions/workflows/maven-build.yaml/badge.svg)](https://github.com/agsamkin/task-list/actions/workflows/maven-build.yaml)
+
 This application helps you organize creating and accessing tasks for users.
 
 You can access Swagger and see all available endpoints by
