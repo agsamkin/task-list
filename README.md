@@ -3,7 +3,7 @@
 This application helps you organize creating and accessing tasks for users.
 
 You can access Swagger and see all available endpoints by
-visiting `http://localhost:8080/swagger-ui/index.html`
+visiting `http://localhost:8081/swagger-ui/index.html`
 
 ## Sequence diagram
 
