@@ -3,7 +3,11 @@ package com.example.task_list.web.mapper;
 import com.example.task_list.domain.user.User;
 import com.example.task_list.web.dto.user.UserDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
 public interface UserMapper extends Mappable<User, UserDto> {
 }

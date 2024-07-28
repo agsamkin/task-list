@@ -99,6 +99,19 @@ public class UserServiceImpl implements UserService {
         return userRepository.isTaskOwner(userId, taskId);
     }
 
+    @Override
+    @Cacheable(
+            value = "UserService::getTaskAuthor",
+            key = "#taskId"
+    )
+    public User getTaskAuthor(
+            final Long taskId
+    ) {
+        return userRepository.findTaskAuthor(taskId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found."));
+    }
+
     @CacheEvict(
             value = "UserService::getById",
             key = "#userId"

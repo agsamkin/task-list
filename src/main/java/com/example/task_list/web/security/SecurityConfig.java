@@ -6,7 +6,6 @@ import io.github.ilyalisov.jwt.service.TokenService;
 import io.github.ilyalisov.jwt.service.TokenServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,6 @@ public class SecurityConfig {
 
     private final JwtProperties jwtProperties;
     private final UserDetailsService userDetailsService;
-    private final ApplicationContext applicationContext;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
