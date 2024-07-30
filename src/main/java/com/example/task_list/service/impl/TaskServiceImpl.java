@@ -15,6 +15,9 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Transactional
@@ -80,4 +83,12 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.addImage(id, fileName);
     }
 
+    @Override
+    public List<Task> getAllSoonTasks(
+            final Duration duration
+    ) {
+        LocalDateTime now = LocalDateTime.now();
+        return taskRepository.findAllSoonTasks(Timestamp.valueOf(now),
+                Timestamp.valueOf(now.plus(duration)));
+    }
 }

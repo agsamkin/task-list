@@ -1,9 +1,11 @@
 package com.example.task_list.service.impl;
 
+import com.example.task_list.domain.MailType;
 import com.example.task_list.domain.exception.ResourceNotFoundException;
 import com.example.task_list.domain.user.Role;
 import com.example.task_list.domain.user.User;
 import com.example.task_list.repository.UserRepository;
+import com.example.task_list.service.MailService;
 import com.example.task_list.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Properties;
 import java.util.Set;
 
 @Transactional
@@ -24,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final MailService mailService;
 
     @Cacheable(value = "UserService::getById", key = "#userId")
     @Transactional(readOnly = true)
@@ -61,13 +65,16 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Transactional
     @Caching(cacheable = {
             @Cacheable(
                     value = "UserService::getById",
+                    condition = "#user.id!=null",
                     key = "#user.id"
             ),
             @Cacheable(
                     value = "UserService::getByUsername",
+                    condition = "#user.username!=null",
                     key = "#user.username"
             )
     })
@@ -83,9 +90,13 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPasswordConfirmation(passwordEncoder.encode(user.getPasswordConfirmation()));
         Set<Role> roles = Set.of(Role.ROLE_USER);
         user.setRoles(roles);
         userRepository.save(user);
+
+        mailService.sendEmail(user, MailType.REGISTRATION, new Properties());
+
         return user;
     }
 
