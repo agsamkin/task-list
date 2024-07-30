@@ -90,7 +90,11 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setPasswordConfirmation(passwordEncoder.encode(user.getPasswordConfirmation()));
+        user.setPasswordConfirmation(
+                passwordEncoder.encode(
+                        user.getPasswordConfirmation()
+                )
+        );
         Set<Role> roles = Set.of(Role.ROLE_USER);
         user.setRoles(roles);
         userRepository.save(user);

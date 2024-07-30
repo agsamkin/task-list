@@ -40,6 +40,9 @@ public class UserServiceImplTest {
     private TaskRepository taskRepository;
 
     @MockBean
+    private MailServiceImpl mailService;
+
+    @MockBean
     private AuthenticationManager authenticationManager;
 
     @Autowired

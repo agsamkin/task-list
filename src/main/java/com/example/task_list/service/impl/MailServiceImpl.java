@@ -25,21 +25,24 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendEmail(
-            User user,
-            MailType type,
-            Properties properties
+            final User user,
+            final MailType type,
+            final Properties properties
     ) {
 
         switch (type) {
             case REGISTRATION -> sendRegistrationMail(user, properties);
             case REMINDER -> sendReminderMail(user, properties);
-            default -> {}
+            default -> { }
         }
 
     }
 
     @SneakyThrows
-    private void sendRegistrationMail(User user, Properties properties) {
+    private void sendRegistrationMail(
+            final User user,
+            final Properties properties
+    ) {
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
 
@@ -55,7 +58,10 @@ public class MailServiceImpl implements MailService {
     }
 
     @SneakyThrows
-    private void sendReminderMail(User user, Properties properties) {
+    private void sendReminderMail(
+            final User user,
+            final Properties properties
+    ) {
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
 

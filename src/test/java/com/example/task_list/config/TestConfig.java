@@ -8,11 +8,13 @@ import com.example.task_list.service.TaskService;
 import com.example.task_list.service.UserService;
 import com.example.task_list.service.impl.AuthServiceImpl;
 import com.example.task_list.service.impl.ImageServiceImpl;
+import com.example.task_list.service.impl.MailServiceImpl;
 import com.example.task_list.service.impl.TaskServiceImpl;
 import com.example.task_list.service.impl.UserServiceImpl;
 import com.example.task_list.service.props.MinioProperties;
 import com.example.task_list.web.security.SecurityUserService;
 import com.example.task_list.web.security.jwt.JwtProperties;
+import freemarker.template.Configuration;
 import io.github.ilyalisov.jwt.service.TokenService;
 import io.github.ilyalisov.jwt.service.TokenServiceImpl;
 import io.minio.MinioClient;
@@ -21,6 +23,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -76,9 +79,25 @@ public class TestConfig {
     }
 
     @Bean
+    public Configuration configuration() {
+        return Mockito.mock(Configuration.class);
+    }
+
+    @Bean
+    public JavaMailSender mailSender() {
+        return Mockito.mock(JavaMailSender.class);
+    }
+
+    @Bean
+    @Primary
+    public MailServiceImpl mailService() {
+        return new MailServiceImpl(configuration(), mailSender());
+    }
+
+    @Bean
     @Primary
     public UserServiceImpl userService() {
-        return new UserServiceImpl(passwordEncoder(), userRepository);
+        return new UserServiceImpl(passwordEncoder(), userRepository, mailService());
     }
 
     @Bean
